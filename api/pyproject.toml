@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "api"
+version = "0.1.0"
+description = ""
+authors = ["Simon Felix Seeger <simon.f.seeger@gmx.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "^5.0.4"
+djangorestframework = "^3.15.1"
+python-dotenv = "^1.0.1"
+requests = "^2.31.0"
+mysqlclient = "^2.2.4"
+django-rest-knox = "^4.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pylance = "^0.10.9"
+black = "^24.3.0"
+pylint-django = "^2.5.5"
+debugpy = "^1.8.1"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
