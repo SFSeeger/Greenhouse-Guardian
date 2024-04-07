@@ -6,7 +6,7 @@ from guardian.views.device import (
     DeviceRegenerateTokenAPIView,
     DeviceRetrieveUpdateDestroyAPIView,
 )
-from guardian.views.entry import DeviceTestAPIView, EntryCreateAPIView, EntryListAPIView
+from guardian.views.entry import EntryCreateAPIView, EntryListAPIView
 
 device_urlpatterns = [
     path("<int:pk>/", DeviceRetrieveUpdateDestroyAPIView.as_view(), name="device"),
@@ -22,7 +22,6 @@ device_urlpatterns = [
 entry_urlpatterns = [
     path("list/", EntryListAPIView.as_view(), name="entry-list"),
     path("", EntryCreateAPIView.as_view(), name="entry-create"),
-    path("test/", DeviceTestAPIView.as_view(), name="device-test"),
 ]
 
 urlpatterns = [
