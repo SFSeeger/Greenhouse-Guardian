@@ -7,4 +7,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path(r"api/auth/", include("knox.urls")),
+    path("api/", include("guardian.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -6,7 +6,10 @@ from api.utils import TimeStampModel
 
 class Device(TimeStampModel):
     name = models.CharField(_("Name"), max_length=255)
-    user = models.ForeignKey(_("User"), "auth.User", on_delete=models.CASCADE)
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    device_token = models.ForeignKey(
+        "knox.AuthToken", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     temperature_limit = models.FloatField(_("Temperature Limit"), null=True, blank=True)
     humidity_limit = models.FloatField(_("Humidity Limit"), null=True, blank=True)
