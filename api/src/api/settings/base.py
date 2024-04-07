@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     # Custom apps
+    "user_management",
     "guardian",
 ]
 
