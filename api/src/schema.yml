@@ -1,0 +1,730 @@
+openapi: 3.0.3
+info:
+  title: Greenhouse Guardian API
+  version: 1.0.0
+  description: A simple API to watch your greenhouse
+paths:
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      tags:
+      - auth
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/logoutall/:
+    post:
+      operationId: auth_logoutall_create
+      description: |-
+        Log the user out of all sessions
+        I.E. deletes all auth tokens for the user
+      tags:
+      - auth
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          description: No response body
+  /api/device/:
+    post:
+      operationId: device_create
+      tags:
+      - device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Device'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Device'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+          description: ''
+  /api/device/{id}/:
+    get:
+      operationId: device_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - device
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+          description: ''
+    put:
+      operationId: device_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Device'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Device'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+          description: ''
+    patch:
+      operationId: device_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDevice'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDevice'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDevice'
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+          description: ''
+    delete:
+      operationId: device_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - device
+      security:
+      - knoxApiToken: []
+      responses:
+        '204':
+          description: No response body
+  /api/device/{id}/regenerate-token/:
+    post:
+      operationId: device_regenerate_token_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - device
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          description: No response body
+  /api/device/list/:
+    get:
+      operationId: device_list_list
+      tags:
+      - device
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+          description: ''
+  /api/entry/:
+    post:
+      operationId: entry_create
+      tags:
+      - entry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Entry'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Entry'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entry'
+          description: ''
+  /api/entry/list/:
+    get:
+      operationId: entry_list_list
+      tags:
+      - entry
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entry'
+          description: ''
+  /api/plant/:
+    post:
+      operationId: plant_create
+      tags:
+      - plant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Plant'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Plant'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plant'
+          description: ''
+  /api/plant/{id}/:
+    get:
+      operationId: plant_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - plant
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plant'
+          description: ''
+    put:
+      operationId: plant_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - plant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Plant'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Plant'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plant'
+          description: ''
+    patch:
+      operationId: plant_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - plant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPlant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPlant'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPlant'
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plant'
+          description: ''
+    delete:
+      operationId: plant_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - plant
+      security:
+      - knoxApiToken: []
+      responses:
+        '204':
+          description: No response body
+  /api/webhook/:
+    post:
+      operationId: webhook_create
+      tags:
+      - webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+          description: ''
+  /api/webhook/{id}/:
+    get:
+      operationId: webhook_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - webhook
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+          description: ''
+    put:
+      operationId: webhook_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+          description: ''
+    patch:
+      operationId: webhook_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhook'
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+          description: ''
+    delete:
+      operationId: webhook_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - webhook
+      security:
+      - knoxApiToken: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        user:
+          type: integer
+          readOnly: true
+        temperature_limit_max:
+          type: number
+          format: double
+          nullable: true
+          title: Maximum Temperature
+        temperature_limit_min:
+          type: number
+          format: double
+          nullable: true
+          title: Minimum Temperature
+        humidity_limit_max:
+          type: number
+          format: double
+          nullable: true
+          title: Maximum Humidity
+        humidity_limit_min:
+          type: number
+          format: double
+          nullable: true
+          title: Minimum Humidity
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+      - user
+    Entry:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        plantentry_set:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlantEntry'
+        humidity:
+          type: number
+          format: double
+        temperature:
+          type: number
+          format: double
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - humidity
+      - id
+      - plantentry_set
+      - temperature
+      - updated_at
+    PatchedDevice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        user:
+          type: integer
+          readOnly: true
+        temperature_limit_max:
+          type: number
+          format: double
+          nullable: true
+          title: Maximum Temperature
+        temperature_limit_min:
+          type: number
+          format: double
+          nullable: true
+          title: Minimum Temperature
+        humidity_limit_max:
+          type: number
+          format: double
+          nullable: true
+          title: Maximum Humidity
+        humidity_limit_min:
+          type: number
+          format: double
+          nullable: true
+          title: Minimum Humidity
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedPlant:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        device:
+          type: integer
+        humidity_limit_max:
+          type: number
+          format: double
+          nullable: true
+          title: Maximum Humidity
+        humidity_limit_min:
+          type: number
+          format: double
+          nullable: true
+          title: Minimum Humidity
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedWebhook:
+      type: object
+      properties:
+        webhook_type:
+          allOf:
+          - $ref: '#/components/schemas/WebhookTypeEnum'
+          minimum: -2147483648
+          maximum: 2147483647
+        url:
+          type: string
+          format: uri
+          title: Webhook URL
+          maxLength: 200
+        user:
+          type: integer
+          readOnly: true
+        message_prefix:
+          type: string
+          nullable: true
+          description: Prefix to add to messages. Useful for adding @everyone or similar
+          maxLength: 255
+    Plant:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        device:
+          type: integer
+        humidity_limit_max:
+          type: number
+          format: double
+          nullable: true
+          title: Maximum Humidity
+        humidity_limit_min:
+          type: number
+          format: double
+          nullable: true
+          title: Minimum Humidity
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - device
+      - name
+      - updated_at
+    PlantEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        plant:
+          type: integer
+        humidity:
+          type: number
+          format: double
+      required:
+      - humidity
+      - id
+      - plant
+    Webhook:
+      type: object
+      properties:
+        webhook_type:
+          allOf:
+          - $ref: '#/components/schemas/WebhookTypeEnum'
+          minimum: -2147483648
+          maximum: 2147483647
+        url:
+          type: string
+          format: uri
+          title: Webhook URL
+          maxLength: 200
+        user:
+          type: integer
+          readOnly: true
+        message_prefix:
+          type: string
+          nullable: true
+          description: Prefix to add to messages. Useful for adding @everyone or similar
+          maxLength: 255
+      required:
+      - url
+      - user
+      - webhook_type
+    WebhookTypeEnum:
+      enum:
+      - 1
+      type: integer
+      description: '* `1` - Discord'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    knoxApiToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
