@@ -1,3 +1,5 @@
+import re
+
 from django.core.cache import cache
 from django.http import HttpRequest
 from django.utils.deprecation import MiddlewareMixin
@@ -6,11 +8,13 @@ from knox.settings import CONSTANTS
 
 from guardian.models.device import Device
 
+token_pattern = re.compile(r"Token\s+([a-zA-Z0-9]+)")
+
 
 class DeviceMiddleware(MiddlewareMixin):
     def process_request(self, request: HttpRequest):
-        token = request.headers.get("Authorization", None)
-        if not token:
+        token = request.headers.get("Authorization", "")
+        if not token_pattern.match(token):
             request.device = None
             return
         token = token[6:]

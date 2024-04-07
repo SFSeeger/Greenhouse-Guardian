@@ -1,22 +1,19 @@
 from django.shortcuts import get_object_or_404
 from knox.models import AuthToken
 from rest_framework import status
-from rest_framework.generics import (
-    CreateAPIView,
-    GenericAPIView,
-    ListAPIView,
-    RetrieveUpdateDestroyAPIView,
-)
+from rest_framework.generics import (CreateAPIView, GenericAPIView,
+                                     ListAPIView, RetrieveUpdateDestroyAPIView)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from guardian.models import Device
 from guardian.serializers import DeviceSerializer
+from user_management.permissions import IsUser
 
 
 class DeviceRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = DeviceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsUser]
 
     def get_queryset(self):
         return Device.objects.filter(user=self.request.user)
@@ -24,7 +21,7 @@ class DeviceRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 class DeviceCreateAPIView(CreateAPIView):
     serializer_class = DeviceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsUser]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -41,14 +38,14 @@ class DeviceCreateAPIView(CreateAPIView):
 
 class DeviceListAPIView(ListAPIView):
     serializer_class = DeviceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsUser]
 
     def get_queryset(self):
         return Device.objects.filter(user=self.request.user)
 
 
 class DeviceRegenerateTokenAPIView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsUser]
 
     def post(self, request, *args, **kwargs):
         device = get_object_or_404(Device, pk=kwargs.get("pk"), user=self.request.user)

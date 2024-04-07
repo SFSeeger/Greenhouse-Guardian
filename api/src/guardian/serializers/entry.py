@@ -17,9 +17,12 @@ class EntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Entry
         fields = [
+            "id",
             "plantentry_set",
             "humidity",
             "temperature",
+            "created_at",
+            "updated_at",
         ]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        read_only_fields = ["created_at", "updated_at"]
         depth = 2

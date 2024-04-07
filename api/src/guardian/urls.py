@@ -7,6 +7,11 @@ from guardian.views.device import (
     DeviceRetrieveUpdateDestroyAPIView,
 )
 from guardian.views.entry import EntryCreateAPIView, EntryListAPIView
+from guardian.views.plant import PlantCreateAPIView, PlantRetrieveUpdateDestroyAPIView
+from guardian.views.webhook import (
+    WebhookCreateAPIView,
+    WebhookRetrieveUpdateDestroyAPIView,
+)
 
 device_urlpatterns = [
     path("<int:pk>/", DeviceRetrieveUpdateDestroyAPIView.as_view(), name="device"),
@@ -24,7 +29,19 @@ entry_urlpatterns = [
     path("", EntryCreateAPIView.as_view(), name="entry-create"),
 ]
 
+plant_urlpatterns = [
+    path("", PlantCreateAPIView.as_view(), name="plant-create"),
+    path("<int:pk>/", PlantRetrieveUpdateDestroyAPIView.as_view(), name="plant"),
+]
+
+webhook_urlpatterns = [
+    path("", WebhookCreateAPIView.as_view(), name="webhook-create"),
+    path("<int:pk>/", WebhookRetrieveUpdateDestroyAPIView.as_view(), name="webhook"),
+]
+
 urlpatterns = [
     path("device/", include(device_urlpatterns)),
     path("entry/", include(entry_urlpatterns)),
+    path("plant/", include(plant_urlpatterns)),
+    path("webhook/", include(webhook_urlpatterns)),
 ]

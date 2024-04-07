@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from guardian.models.entry import Entry
+from guardian.models import Entry, Plant
 
 
 class EntryFilter(filters.FilterSet):
@@ -9,3 +9,9 @@ class EntryFilter(filters.FilterSet):
     class Meta:
         model = Entry
         fields = ["device", "created_at"]
+
+
+class PlantFilter(filters.FilterSet):
+    class Meta:
+        model = Plant
+        fields = ["device", "name"]
