@@ -6,8 +6,7 @@ from guardian.models import Device
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
-        fields = "__all__"
+        exclude = ["device_token"]
         extra_kwargs = {
             "user": {"read_only": True},
-            "device_token": {"write_only": True},
         }

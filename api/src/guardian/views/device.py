@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from knox.models import AuthToken
 from rest_framework import status
 from rest_framework.generics import (
@@ -6,27 +7,11 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveUpdateDestroyAPIView,
 )
-from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .models import Device, Entry
-from .serializers import DeviceSerializer, EntrySerializer
-
-
-class EntryList(APIView):
-    def get(self, request):
-        snippets = Entry.objects.all()
-        serializer = EntrySerializer(snippets, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = EntrySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from guardian.models import Device
+from guardian.serializers import DeviceSerializer
 
 
 class DeviceRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
@@ -60,3 +45,16 @@ class DeviceListAPIView(ListAPIView):
 
     def get_queryset(self):
         return Device.objects.filter(user=self.request.user)
+
+
+class DeviceRegenerateTokenAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        device = get_object_or_404(Device, pk=kwargs.get("pk"), user=self.request.user)
+        if device.device_token:
+            device.device_token.delete()
+        instance, token = AuthToken.objects.create(user=self.request.user)
+        device.device_token = instance
+        device.save()
+        return Response({"token": token}, status=status.HTTP_200_OK)

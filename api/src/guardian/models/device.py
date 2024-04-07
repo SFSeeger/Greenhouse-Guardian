@@ -14,8 +14,14 @@ class Device(TimeStampModel):
         "knox.AuthToken", on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    temperature_limit = models.FloatField(_("Temperature Limit"), null=True, blank=True)
-    humidity_limit = models.FloatField(_("Humidity Limit"), null=True, blank=True)
+    temperature_limit_max = models.FloatField(
+        _("Maximum Temperature"), null=True, blank=True
+    )
+    temperature_limit_min = models.FloatField(
+        _("Minimum Temperature"), null=True, blank=True
+    )
+    humidity_limit_max = models.FloatField(_("Maximum Humidity"), null=True, blank=True)
+    humidity_limit_min = models.FloatField(_("Minimum Humidity"), null=True, blank=True)
 
     def __str__(self):
         return self.name
