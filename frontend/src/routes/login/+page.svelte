@@ -1,8 +1,33 @@
 <script lang="ts">
-	import Card from '$lib/components/card.svelte';
-    import type { PageData } from './$types';
+	import { PUBLIC_API_URL } from '$env/static/public';
+	import { authToken } from '../../auth';
+  import type { ActionData, PageData } from './$types';
+  import { error } from '@sveltejs/kit';
     
     export let data: PageData;
+
+    let formData = {
+      username: '',
+      password: ''
+    };
+
+    const login = async () => {
+      const res = await fetch(new URL("auth/login/", PUBLIC_API_URL), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa(formData.username + ':' + formData.password)
+            },
+        });
+        if (!res.ok) {
+             if(res.status === 401) {
+            error(401, await res.json().then(req_data => req_data.detail));
+            };
+            error(res.status, await res.text());
+        }
+        const data = await res.json();
+        authToken.set(data.token);
+    }
 </script>
 
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -12,11 +37,11 @@
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form class="space-y-6" action="#" method="POST">
+    <form class="space-y-6" method="POST" on:submit|preventDefault={login}>
       <div>
-        <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address <span class="text-red-500">*</span></label>
+        <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username <span class="text-red-500">*</span></label>
         <div class="mt-2">
-          <input id="email" name="email" type="email" autocomplete="email" required class="">
+          <input id="username" name="username" type="username" autocomplete="username" required bind:value={formData.username}>
         </div>
       </div>
 
@@ -28,7 +53,7 @@
           </div>
         </div>
         <div class="mt-2">
-          <input id="password" name="password" type="password" autocomplete="current-password" required >
+          <input id="password" name="password" type="password" autocomplete="current-password" required bind:value={formData.password}>
         </div>
       </div>
 
