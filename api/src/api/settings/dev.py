@@ -10,3 +10,5 @@ DEFAULT_FROM_EMAIL = "Greenhouse Guardian <sfseeger.de>"
 EMAIL_PORT = 1025
 
 STATIC_ROOT = "/static/"
+
+CORS_ALLOW_ALL_ORIGINS = True
