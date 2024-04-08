@@ -1,8 +1,12 @@
 from django.shortcuts import get_object_or_404
 from knox.models import AuthToken
 from rest_framework import status
-from rest_framework.generics import (CreateAPIView, GenericAPIView,
-                                     ListAPIView, RetrieveUpdateDestroyAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    GenericAPIView,
+    ListAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -27,7 +31,7 @@ class DeviceCreateAPIView(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        instance, token = AuthToken.objects.create(user=self.request.user)
+        instance, token = AuthToken.objects.create(user=self.request.user, expiry=None)
         serializer.save(user=self.request.user, device_token=instance)
 
         headers = self.get_success_headers(serializer.data)
@@ -51,7 +55,7 @@ class DeviceRegenerateTokenAPIView(GenericAPIView):
         device = get_object_or_404(Device, pk=kwargs.get("pk"), user=self.request.user)
         if device.device_token:
             device.device_token.delete()
-        instance, token = AuthToken.objects.create(user=self.request.user)
+        instance, token = AuthToken.objects.create(user=self.request.user, expiry=None)
         device.device_token = instance
         device.save()
         return Response({"token": token}, status=status.HTTP_200_OK)
