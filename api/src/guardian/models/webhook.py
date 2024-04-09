@@ -12,7 +12,9 @@ class Webhook(models.Model):
     class WebhookType(models.IntegerChoices):
         DISCORD = 1, _("Discord")
 
-    webhook_type = models.IntegerField(_("Webhook Type"), choices=WebhookType.choices)
+    webhook_type = models.IntegerField(
+        _("Webhook Type"), choices=WebhookType.choices, default=WebhookType.DISCORD
+    )
     url = models.URLField(_("Webhook URL"))
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     message_prefix = models.CharField(

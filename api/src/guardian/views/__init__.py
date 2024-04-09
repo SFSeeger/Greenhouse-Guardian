@@ -8,9 +8,14 @@ from .entry import EntryCreateAPIView, EntryListAPIView
 from .plant import (
     PlantCreateAPIView,
     PlantListAPIView,
+    PlantMassCreateAPIView,
     PlantRetrieveUpdateDestroyAPIView,
 )
-from .webhook import WebhookCreateAPIView, WebhookRetrieveUpdateDestroyAPIView
+from .webhook import (
+    WebhookCreateAPIView,
+    WebhookRetrieveUpdateDestroyAPIView,
+    WebhookUserRetrieveAPIView,
+)
 
 __all__ = [
     DeviceCreateAPIView.__name__,
@@ -22,6 +27,8 @@ __all__ = [
     PlantCreateAPIView.__name__,
     PlantListAPIView.__name__,
     PlantRetrieveUpdateDestroyAPIView.__name__,
+    PlantMassCreateAPIView.__name__,
     WebhookCreateAPIView.__name__,
     WebhookRetrieveUpdateDestroyAPIView.__name__,
+    WebhookUserRetrieveAPIView.__name__,
 ]
