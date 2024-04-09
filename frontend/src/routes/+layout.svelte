@@ -4,18 +4,28 @@
 	import { createAvatar } from '@dicebear/core';
 	import { bottts } from '@dicebear/collection';
 	import { authToken } from '../auth';
+	import { PUBLIC_API_URL } from '$env/static/public';
+	let profileDropdown: HTMLElement;
+	const openProfileDropdown = () => {
+		console.log('clicked');
+		profileDropdown.classList.toggle('opacity-0');
+		profileDropdown.classList.toggle('scale-95');
+		profileDropdown.classList.toggle('opacity-100');
+		profileDropdown.classList.toggle('scale-100');
+	};
 
-	onMount(() => {
-		const profileDropdown = document.getElementById('profile-dropdown');
-		const userMenuButton = document.getElementById('user-menu-button');
-		userMenuButton?.addEventListener('click', () => {
-			console.log('clicked');
-			profileDropdown?.classList.toggle('opacity-0');
-			profileDropdown?.classList.toggle('scale-95');
-			profileDropdown?.classList.toggle('opacity-100');
-			profileDropdown?.classList.toggle('scale-100');
+	const logout = () => {
+		localStorage.removeItem('authToken');
+		authToken.set('');
+		fetch(new URL('/logout/', PUBLIC_API_URL), {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Token ${authToken}`
+			}
 		});
-	});
+		window.location.href = '/';
+	};
 
 	const avatar = createAvatar(bottts, {
 		seed: 'example'
@@ -101,20 +111,20 @@
 				<!-- Profile dropdown -->
 				<div class="relative ml-3">
 					<div>
-						{#if authToken}
+						{#if $authToken !== ''}
 							<button
 								type="button"
 								class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-								id="user-menu-button"
 								aria-expanded="false"
 								aria-haspopup="true"
+								on:click={openProfileDropdown}
 							>
 								<span class="absolute -inset-1.5"></span>
 								<span class="sr-only">Open user menu</span>
 								<img class="h-8 w-8 rounded-full" src={avatar.toDataUriSync()} alt="" />
 							</button>
 						{:else}
-							<a href="/login?redirect-to={window.location.href}" class="btn btn-primary">Login</a>
+							<a href="/login" class="btn btn-primary">Login</a>
 						{/if}
 					</div>
 
@@ -129,7 +139,7 @@
               To: "transform opacity-0 scale-95"
           -->
 					<div
-						id="profile-dropdown"
+						bind:this={profileDropdown}
 						class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100 transform opacity-0 scale-95"
 						role="menu"
 						aria-orientation="vertical"
@@ -144,12 +154,12 @@
 							tabindex="-1"
 							id="user-menu-item-1">Webhook</a
 						>
-						<a
-							href="#"
+						<button
+							on:click={logout}
 							class="block px-4 py-2 text-sm text-gray-700"
 							role="menuitem"
 							tabindex="-1"
-							id="user-menu-item-2">Sign out</a
+							id="user-menu-item-2">Sign out</button
 						>
 					</div>
 				</div>
