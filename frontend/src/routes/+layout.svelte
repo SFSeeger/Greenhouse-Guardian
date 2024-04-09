@@ -1,6 +1,9 @@
 <script lang="ts">
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import { createAvatar } from '@dicebear/core';
+	import { bottts } from '@dicebear/collection';
+	import { authToken } from '../auth';
 
 	onMount(() => {
 		const profileDropdown = document.getElementById('profile-dropdown');
@@ -12,6 +15,10 @@
 			profileDropdown?.classList.toggle('opacity-100');
 			profileDropdown?.classList.toggle('scale-100');
 		});
+	});
+
+	const avatar = createAvatar(bottts, {
+		seed: 'example'
 	});
 </script>
 
@@ -94,21 +101,21 @@
 				<!-- Profile dropdown -->
 				<div class="relative ml-3">
 					<div>
-						<button
-							type="button"
-							class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-							id="user-menu-button"
-							aria-expanded="false"
-							aria-haspopup="true"
-						>
-							<span class="absolute -inset-1.5"></span>
-							<span class="sr-only">Open user menu</span>
-							<img
-								class="h-8 w-8 rounded-full"
-								src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-								alt=""
-							/>
-						</button>
+						{#if authToken}
+							<button
+								type="button"
+								class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+								id="user-menu-button"
+								aria-expanded="false"
+								aria-haspopup="true"
+							>
+								<span class="absolute -inset-1.5"></span>
+								<span class="sr-only">Open user menu</span>
+								<img class="h-8 w-8 rounded-full" src={avatar.toDataUriSync()} alt="" />
+							</button>
+						{:else}
+							<a href="/login?redirect-to={window.location.href}" class="btn btn-primary">Login</a>
+						{/if}
 					</div>
 
 					<!--
@@ -135,14 +142,7 @@
 							class="block px-4 py-2 text-sm text-gray-700"
 							role="menuitem"
 							tabindex="-1"
-							id="user-menu-item-0">Your Profile</a
-						>
-						<a
-							href="#"
-							class="block px-4 py-2 text-sm text-gray-700"
-							role="menuitem"
-							tabindex="-1"
-							id="user-menu-item-1">Settings</a
+							id="user-menu-item-1">Webhook</a
 						>
 						<a
 							href="#"

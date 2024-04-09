@@ -5,7 +5,6 @@
 	import type { PageData } from './$types';
 	import { authToken } from '../../../auth';
 	import { error } from '@sveltejs/kit';
-	import { stringify } from 'postcss';
 	import type { Plant } from '$lib/types/plant';
 
 	export let data: PageData;
