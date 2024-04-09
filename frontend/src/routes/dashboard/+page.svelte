@@ -69,5 +69,9 @@
 	</select>
 </div>
 
-<Chart title="Temperature" labels={humanReadableLabels} datasets={temperatureDataset} />
-<Chart title="Humidity" labels={humanReadableLabels} datasets={humidityDataset} />
+{#if temperatureDataset.length !== 0 && humidityDataset.length !== 0}
+	<Chart title="Temperature" labels={humanReadableLabels} datasets={temperatureDataset} />
+	<Chart title="Humidity" labels={humanReadableLabels} datasets={humidityDataset} />
+{:else}
+	<p>No Data found</p>
+{/if}
