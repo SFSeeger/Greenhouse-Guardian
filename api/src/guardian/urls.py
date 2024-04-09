@@ -7,7 +7,7 @@ from guardian.views.device import (
     DeviceRetrieveUpdateDestroyAPIView,
 )
 from guardian.views.entry import EntryCreateAPIView, EntryListAPIView
-from guardian.views.plant import PlantCreateAPIView, PlantRetrieveUpdateDestroyAPIView
+from guardian.views.plant import PlantCreateAPIView, PlantListAPIView, PlantRetrieveUpdateDestroyAPIView
 from guardian.views.webhook import (
     WebhookCreateAPIView,
     WebhookRetrieveUpdateDestroyAPIView,
@@ -32,6 +32,7 @@ entry_urlpatterns = [
 plant_urlpatterns = [
     path("", PlantCreateAPIView.as_view(), name="plant-create"),
     path("<int:pk>/", PlantRetrieveUpdateDestroyAPIView.as_view(), name="plant"),
+    path("list/", PlantListAPIView.as_view(), name="plant-list"),
 ]
 
 webhook_urlpatterns = [
