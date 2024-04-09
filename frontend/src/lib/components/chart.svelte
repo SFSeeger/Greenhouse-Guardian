@@ -34,5 +34,10 @@
 </script>
 
 <div>
-	<Line {data} {title} options={{ responsive: true, animation: false }} />
+	<Line
+		{data}
+		{title}
+		options={{ responsive: true, animation: false, maintainAspectRatio: false }}
+		height="300rem"
+	/>
 </div>

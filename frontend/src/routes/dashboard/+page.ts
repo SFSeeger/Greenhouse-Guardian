@@ -4,6 +4,8 @@ import type { PageLoad } from './$types';
 import { get } from 'svelte/store';
 import { authToken } from '../../auth';
 import type { Entry } from '$lib/types/entry';
+import { simpleGet } from '$lib/utils';
+import { filters } from './stores';
 
 export const ssr = false;
 
@@ -39,17 +41,17 @@ const createDeviceDatasets = (entries: Entry[], labels: string[]) => {
 	return [temperatureDataset, humidityDataset];
 };
 
-export const load: PageLoad = async ({ fetch }) => {
-	const response = await fetch(new URL('entry/list/', PUBLIC_API_URL), {
-		headers: { 'Content-Type': 'application/json', Authorization: 'Token ' + get(authToken) }
-	});
-	if (!response.ok) {
-		if (response.status === 401) {
-			error(401, await response.json().then((req_data) => req_data.detail));
-		}
-		error(response.status, await response.text());
-	}
-	const req_data: Entry[] = await response.json();
+export const load: PageLoad = async ({ fetch, url }) => {
+	const created_at_after_search_params = `created_at_after=${new Date(new Date().valueOf() - 1000 * 60 * get(filters).from).toISOString()}`;
+	const devices_search_params =
+		get(filters)
+			.device.map((device) => `device=${device}`)
+			.join('&') || '';
+	const request_url = new URL(
+		`entry/list/?${created_at_after_search_params}&${devices_search_params}`,
+		PUBLIC_API_URL
+	);
+	const req_data: Entry[] = await simpleGet(fetch, request_url);
 	const [temperatureDataset, humidityDataset] = createDeviceDatasets(
 		req_data,
 		req_data.map((entry) => entry.created_at)
@@ -57,6 +59,7 @@ export const load: PageLoad = async ({ fetch }) => {
 	return {
 		entries: req_data,
 		temperatureDataset: temperatureDataset,
-		humidityDataset: humidityDataset
+		humidityDataset: humidityDataset,
+		devices: await simpleGet(fetch, new URL('device/list/', PUBLIC_API_URL))
 	};
 };
