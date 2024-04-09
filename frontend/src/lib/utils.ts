@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 
 export const simpleGet = async (
 	svelte_fetch: (url: URL, options?: RequestInit) => Promise<Response>,
-	url: URL
+	url: URL,
 ) => {
 	const response = await svelte_fetch(url, {
 		headers: { 'Content-Type': 'application/json', Authorization: 'Token ' + get(authToken) }

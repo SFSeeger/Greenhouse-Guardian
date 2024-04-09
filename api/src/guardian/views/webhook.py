@@ -21,6 +21,18 @@ class WebhookRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         return Webhook.objects.filter(user=self.request.user)
 
 
+class WebhookUserRetrieveAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated, IsUser]
+
+    def get(self, request):
+        try:
+            webhook = Webhook.objects.get(user=request.user)
+        except Webhook.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = WebhookSerializer(webhook)
+        return Response(serializer.data)
+
+
 class WebhookCreateAPIView(CreateAPIView):
     serializer_class = WebhookSerializer
     permission_classes = [IsAuthenticated, IsUser]

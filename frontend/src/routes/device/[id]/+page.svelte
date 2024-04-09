@@ -52,7 +52,10 @@
 	};
 </script>
 
-<h1>Device {data.device.name}</h1>
+<h1>Device</h1>
+<h2 class="text-xl font-bold">
+	<InlineEditing value={data.device.name} name="name" on:inlineSubmit={saveDeviceValue} />
+</h2>
 <div>
 	<p>
 		Max Temperature: <InlineEditing
@@ -86,7 +89,10 @@
 
 <div>
 	{#each data.plants as plant}
-		<h3 class="text-xl font-bold">Plant {plant.name}</h3>
+		<h3 class="text-xl font-bold">Plants</h3>
+		<h4 class="text-md font-bold">
+			<InlineEditing value={plant.name} name="name" on:inlineSubmit={savePlantValue(plant.id)} />
+		</h4>
 		<p>
 			Maximum Humidity: <InlineEditing
 				value={plant.humidity_limit_max}

@@ -44,7 +44,11 @@
 	</form>
 {:else}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div on:click={edit}>
-		{value}
-	</div>
+	{#if value}
+		<div on:click={edit}>
+			{value}
+		</div>
+	{:else}
+		<div on:click={edit} class="text-gray-600">Click to edit</div>
+	{/if}
 {/if}
