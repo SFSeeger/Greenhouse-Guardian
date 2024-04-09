@@ -5,7 +5,11 @@ from .device import (
     DeviceRetrieveUpdateDestroyAPIView,
 )
 from .entry import EntryCreateAPIView, EntryListAPIView
-from .plant import PlantCreateAPIView, PlantRetrieveUpdateDestroyAPIView
+from .plant import (
+    PlantCreateAPIView,
+    PlantListAPIView,
+    PlantRetrieveUpdateDestroyAPIView,
+)
 from .webhook import WebhookCreateAPIView, WebhookRetrieveUpdateDestroyAPIView
 
 __all__ = [
@@ -16,6 +20,7 @@ __all__ = [
     EntryListAPIView.__name__,
     EntryCreateAPIView.__name__,
     PlantCreateAPIView.__name__,
+    PlantListAPIView.__name__,
     PlantRetrieveUpdateDestroyAPIView.__name__,
     WebhookCreateAPIView.__name__,
     WebhookRetrieveUpdateDestroyAPIView.__name__,

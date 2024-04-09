@@ -12,6 +12,7 @@ class PlantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plant
         fields = [
+            "id",
             "name",
             "device",
             "humidity_limit_max",
