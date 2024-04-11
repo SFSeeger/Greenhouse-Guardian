@@ -17,7 +17,7 @@ void makePostRequest(const String url, const String payload, JsonDocument &json)
         String response = http.getString();
         Serial.println(httpResponseCode);
         Serial.println(response);
-        if (httpResponseCode == 200)
+        if (httpResponseCode / 100 == 2 && response.length() > 0)
         {
             Serial.println("Success on sending POST");
             auto deserializeError = deserializeJson(json, response);
