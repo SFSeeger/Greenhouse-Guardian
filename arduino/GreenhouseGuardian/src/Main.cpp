@@ -1,13 +1,22 @@
 #include <Arduino.h>
-#include <WiFiManager.h>
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 
-WiFiManager wifiManager;
+#include <WifiHandler.h>
+#include <Error.h>
+#include <Config.h>
+#include <BoardSettings.h>
 
 void setup()
 {
-    wifiManager.autoConnect("Greenhouse Guardian Device");
+    Serial.begin(9600);
+    Serial.println("Setup methods");
+    setupError();
+    loadConfig();
+    setupUserPins();
+
+    Serial.println("Starting WiFi");
+    handleWiFi();
 }
 
 void loop()
