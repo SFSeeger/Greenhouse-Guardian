@@ -65,19 +65,20 @@ void handleWiFi()
         makePostRequest("/plants", body, response);
         for (unsigned i = 0; i < NUM_PLANTS; i++)
         {
-            plants[i].plantId = response[i]["id"];
+            plants[i].plantId = response["ids"][i];
         }
 
         Serial.println("Saving Config");
         JsonDocument json;
         json["authToken"] = authToken;
         json["apiUrl"] = apiUrl;
-        JsonArray plantsArray = json.createNestedArray("plants");
+        JsonArray plantsArray = json["plants"].to<JsonArray>();
         for (int i = 0; i < NUM_PLANTS; i++)
         {
-            JsonObject plant = plantsArray.createNestedObject();
+            JsonObject plant;
             plant["plantId"] = plants[i].plantId;
             plant["plantPin"] = plants[i].plantPin;
+            plantsArray.add(plant);
         }
 
         File configFile = SPIFFS.open("/config.json", "w");

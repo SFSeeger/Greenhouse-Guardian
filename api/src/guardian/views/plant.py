@@ -1,3 +1,5 @@
+from django.db import transaction
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
@@ -41,9 +43,27 @@ class PlantMassCreateAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated, IsDevice]
 
     def post(self, request):
-        print(request.data)
-        request_data = [dict(data, device=request.device.id) for data in request.data]
-        serializer = self.get_serializer(data=request_data, many=True)
+        data = request.data
+
+        if not isinstance(data, list):
+            return Response({"detail": "Expected a list of items but got type 'dict'."}, status=status.HTTP_400_BAD_REQUEST)
+
+        data = [dict(d, device=request.device.id) for d in data]
+        serializer = self.get_serializer(data=data, many=True)
+
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        request_ids = [d.get('id') for d in data]
+
+        existing_ids = list(Plant.objects.filter(id__in=request_ids).values_list('id', flat=True))
+        objects_to_create = []
+        for obj_id, obj in zip(request_ids, serializer.validated_data):
+            if not obj_id in existing_ids:
+                objects_to_create.append(obj)
+
+        with transaction.atomic():
+            plants = Plant.objects.bulk_create([Plant(**data) for data in objects_to_create])
+
+        request_plants = Plant.objects.filter(Q(id__in=[plant.id for plant in plants]) | Q(id__in=existing_ids))
+
+        return Response({"ids": request_plants.values_list("id", flat=True)}, status=status.HTTP_201_CREATED)
