@@ -9,6 +9,7 @@
 
 #include "Error.h"
 #include <Config.h>
+#include <HTTPManager.h>
 
 bool shouldSaveConfig = false;
 
@@ -46,10 +47,38 @@ void handleWiFi()
     Serial.println("Got AuthToken: " + String(authToken));
     if (shouldSaveConfig)
     {
+        Serial.println("getting plant ids");
+        // Create Plants on server. Send ids to prevent duplicates
+        JsonDocument response;
+        String body = "{[";
+        for (int i = 0; i < NUM_PLANTS; i++)
+        {
+            body += "{\"id\":" + String(plants[i].plantId + ",");
+            body += ",\"name\":\"Plant " + String(plants[i].plantId) + "\"}";
+            if (i != NUM_PLANTS - 1)
+            {
+                body += ",";
+            }
+        }
+        body += "]}";
+
+        makePostRequest("/plants", body, response);
+        for (unsigned i = 0; i < NUM_PLANTS; i++)
+        {
+            plants[i].plantId = response[i]["id"];
+        }
+
         Serial.println("Saving Config");
         JsonDocument json;
         json["authToken"] = authToken;
         json["apiUrl"] = apiUrl;
+        JsonArray plantsArray = json.createNestedArray("plants");
+        for (int i = 0; i < NUM_PLANTS; i++)
+        {
+            JsonObject plant = plantsArray.createNestedObject();
+            plant["plantId"] = plants[i].plantId;
+            plant["plantPin"] = plants[i].plantPin;
+        }
 
         File configFile = SPIFFS.open("/config.json", "w");
         if (!configFile)
