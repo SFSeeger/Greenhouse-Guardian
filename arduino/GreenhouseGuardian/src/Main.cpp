@@ -6,6 +6,7 @@
 #include <Error.h>
 #include <Config.h>
 #include <BoardSettings.h>
+#include <Guardian.h>
 
 void setup()
 {
@@ -13,7 +14,8 @@ void setup()
     Serial.println("Setup methods");
     setupError();
     loadConfig();
-    setupUserPins();
+    setupDHT();
+    setupPlants();
 
     Serial.println("Starting WiFi");
     handleWiFi();
@@ -21,4 +23,6 @@ void setup()
 
 void loop()
 {
+    sendDataToServer();
+    delay(1000 * 2);
 }

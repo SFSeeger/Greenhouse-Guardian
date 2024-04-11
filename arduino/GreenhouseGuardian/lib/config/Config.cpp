@@ -6,12 +6,22 @@
 
 #include <ArduinoJson.h>
 
+#include "BoardSettings.h"
 #include "Config.h"
 #include <Error.h>
 
 char authToken[64];
 char apiUrl[64];
-PlantConfig plants[NUM_PLANTS];
+PlantConfig plants[NUM_PLANTS] = {{0, PLANT_PIN_1}, {0, PLANT_PIN_2}, {0, PLANT_PIN_3}}; // Change this based on board config
+
+void loadPlants(PlantConfig *plants, JsonDocument &json)
+{
+    for (int i = 0; i < NUM_PLANTS; i++)
+    {
+        plants[i].plantId = json["plants"][i]["plantId"];
+        plants[i].plantPin = json["plants"][i]["plantPin"];
+    }
+}
 
 void loadConfig()
 {
@@ -42,6 +52,7 @@ void loadConfig()
                 // ADD ALL CONFIG VARS HERE
                 strcpy(authToken, json["authToken"]);
                 strcpy(apiUrl, json["apiUrl"]);
+                loadPlants(plants, json);
             }
             else
             {

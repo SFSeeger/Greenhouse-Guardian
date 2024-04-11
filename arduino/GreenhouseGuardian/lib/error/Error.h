@@ -4,6 +4,7 @@
 enum ERROR
 {
     FsError = 1,
+    DHT_Error = 2,
 };
 
 void setupError();

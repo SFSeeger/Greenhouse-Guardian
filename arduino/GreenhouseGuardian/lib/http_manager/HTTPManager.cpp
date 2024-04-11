@@ -1,16 +1,14 @@
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
 
-#include <WifiHandler.h>
+#include <Config.h>
 
-JsonDocument sendPostRequest(const String *url, const String payload)
+void makePostRequest(const String url, const String payload, JsonDocument &json)
 {
-    JsonDocument json;
-
     HTTPClient http;
-    http.begin(String(apiUrl) + *url);
+    http.begin(String(apiUrl) + url);
     http.addHeader("Content-Type", "application/json");
-    http.addHeader("Authorization", authToken);
+    http.addHeader("Authorization", "Token " + String(authToken));
 
     int httpResponseCode = http.POST(payload);
 
@@ -36,5 +34,4 @@ JsonDocument sendPostRequest(const String *url, const String payload)
     }
 
     http.end();
-    return json;
 }
