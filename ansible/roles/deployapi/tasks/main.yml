@@ -1,0 +1,25 @@
+# clone git repository
+- name: Clone api repository
+  git:
+    repo: "{{ greenhouse_guardian_repo }}"
+    dest: "{{ api_deploy_dir }}"
+    accept_hostkey: yes
+    clone: yes
+    version: "{{ branch_name | default('main', true) }}"
+
+# copy .env file
+- name: Copy .env file
+  template:
+    src: .env.j2
+    dest: "{{ api_deploy_dir }}/api/.env"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: 0640
+
+# Start deploy.compose docker service
+- name: Start deploy.compose docker service
+  docker_compose:
+    project_src: "{{ api_deploy_dir }}/api"
+    files:
+      - docker-compose-prod.yml
+    state: started
