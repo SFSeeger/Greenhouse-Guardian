@@ -44,7 +44,7 @@
 - name: Install Docker module for Python
   pip:
     name:
-      - docker
+      - docker==6.1.3
       - docker-compose
 
 - name: Set dangerous git config
