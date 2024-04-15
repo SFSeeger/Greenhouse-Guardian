@@ -1,0 +1,1 @@
+nginx_deploy_dir: "/home/{{docker_user}}/nginx/"

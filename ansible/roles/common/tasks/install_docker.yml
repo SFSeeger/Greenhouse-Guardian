@@ -27,6 +27,28 @@
     state: latest
     update_cache: true
 
+#Add docker user and group
+- name: Add docker group
+  group:
+    name: "{{ docker_group }}"
+    state: present
+
+- name: Add docker user
+  user:
+    name: "{{ docker_user }}"
+    state: present
+    groups: "{{ docker_group }}"
+    create_home: yes
+    append: yes
+
 - name: Install Docker module for Python
   pip:
-    name: docker
+    name:
+      - docker
+      - docker-compose
+
+- name: Set dangerous git config
+  git_config:
+    name: safe.directory
+    value: "*"
+    scope: global
