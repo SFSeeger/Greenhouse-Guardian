@@ -9,9 +9,8 @@ RUN apt-get update
 RUN apt-get install -y default-libmysqlclient-dev libssl-dev libffi-dev build-essential pkg-config gettext
 
 WORKDIR /app/web
-COPY --chown=root:root src/ ./src/
+COPY --chown=root:root src/ ./
 
-WORKDIR /app
 ADD ./entrypoints/* ./
 
 FROM base as dev
@@ -21,8 +20,7 @@ RUN pip install -r requirements-dev.txt --no-cache-dir
 EXPOSE 80
 EXPOSE 3000
 
-WORKDIR /app/web
-ENTRYPOINT [ "bash", "/app/dev.sh" ]
+ENTRYPOINT [ "bash", "/app/web/dev.sh" ]
 
 
 FROM base as prod
@@ -32,5 +30,4 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 EXPOSE 80
 
-WORKDIR /app/web
-ENTRYPOINT [ "bash", "/app/prod.sh" ]
+ENTRYPOINT [ "bash", "/app/web/prod.sh" ]

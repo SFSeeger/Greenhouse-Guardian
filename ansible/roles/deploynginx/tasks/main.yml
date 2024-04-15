@@ -1,28 +1,23 @@
-#Create deploy directory
-- name: Create deploy directory
-  file:
-    path: "{{ nginx_deploy_dir }}"
-    state: directory
-    owner: "{{ docker_user }}"
-    group: "{{ docker_group }}"
-    mode: 0755
+- name: install nginx
+  apt: name=nginx state=latest
 
-#Copy nginx config to the remote server
-- name: Copy nginx config to the remote server
+- name: copy nginx config
   template:
-    src: nginx.conf.j2
-    dest: "{{nginx_deploy_dir}}/nginx.conf"
-    owner: "{{ docker_user }}"
-    group: "{{ docker_group }}"
+    src: default.j2
+    dest: /etc/nginx/sites-available/default
+    owner: www-data
+    group: www-data
     mode: 0644
 
-# start Nginx docker container
-- name: Start Nginx docker container
-  docker_container:
+- name: enable nginx site
+  file:
+    src: /etc/nginx/sites-available/default
+    path: /etc/nginx/sites-enabled/default
+    state: link
+  notify:
+    - nginx restart
+
+- name: start nginx
+  service:
     name: nginx
-    image: nginx
-    volumes:
-      - "{{nginx_deploy_dir}}/nginx.conf:/etc/nginx/nginx.conf:ro"
     state: started
-    ports:
-      - "80:80"

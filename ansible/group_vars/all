@@ -40,4 +40,4 @@ vault_db_root_password: !vault |
   36313162636237303236353932656236376330656165396662336331363266363235333238396263
   32623765326335323466
 db_host: db
-api_host: https://greenhouse.sfseeger.de
+api_host: greenhouse.sfseeger.de
