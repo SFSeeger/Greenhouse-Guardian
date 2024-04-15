@@ -113,6 +113,10 @@
 	};
 </script>
 
+<svelte:head>
+    <title>Devices - Greenhouse Guardian</title> 
+</svelte:head>
+
 <div class="flex justify-between">
 	<h1>Devices</h1>
 	<button class="btn btn-primary" on:click={createDevice}>Create Device</button>

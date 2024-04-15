@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { PUBLIC_API_URL } from '$env/static/public';
-	import { authToken } from '../../auth';
+	import { authToken, user } from '../../auth';
 	import type { ActionData, PageData } from './$types';
 	import { error } from '@sveltejs/kit';
 	import guardianIcon from '$lib/assets/images/Greenhouse.svg'
@@ -36,9 +36,14 @@
 		}
 		const data = await res.json();
 		authToken.set(data.token);
+		user.set(data.user);
 		goto(new URLSearchParams(window.location.search).get('redirect-to') || '/dashboard');
 	};
 </script>
+
+<svelte:head>
+    <title>Login - Greenhouse Guardian</title> 
+</svelte:head>
 
 {#each errors as error}
 	<div

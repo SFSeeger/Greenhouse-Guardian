@@ -11,3 +11,13 @@ authToken.subscribe(value => {
         localStorage.removeItem('authToken');
     }
 });
+
+export const user = writable(browser && JSON.parse(localStorage.getItem('user') || '{}') || "");
+user.subscribe(value => {
+    if(!browser) return;
+    if(value) {
+        localStorage.setItem('user', JSON.stringify(value));
+    } else {
+        localStorage.removeItem('user');
+    }
+});

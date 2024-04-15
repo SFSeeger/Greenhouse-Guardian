@@ -2,17 +2,16 @@
 	import '../app.css';
 	import { createAvatar } from '@dicebear/core';
 	import { bottts } from '@dicebear/collection';
-	import { authToken } from '../auth';
+	import { authToken, user } from '../auth';
 	import { PUBLIC_API_URL } from '$env/static/public';
-	import guardianIcon from '$lib/assets/images/icon1024.png'
+	import guardianIcon from '$lib/assets/images/icon1024.png';
+	import { get } from 'svelte/store';
 
 	let profileDropdown: HTMLElement;
 	const openProfileDropdown = () => {
-		console.log('clicked');
 		profileDropdown.classList.toggle('opacity-0');
-		profileDropdown.classList.toggle('scale-95');
+		profileDropdown.classList.toggle('hidden');
 		profileDropdown.classList.toggle('opacity-100');
-		profileDropdown.classList.toggle('scale-100');
 	};
 
 	const logout = () => {
@@ -27,9 +26,8 @@
 		});
 		window.location.href = '/';
 	};
-
 	const avatar = createAvatar(bottts, {
-		seed: 'example'
+		seed: get(user).username
 	});
 </script>
 
@@ -84,11 +82,7 @@
 			</div>
 			<div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
 				<a href="/" class="flex flex-shrink-0 items-center">
-					<img
-						class="h-8 w-auto"
-						src="{guardianIcon}"
-						alt="Greenhouse Guardian"
-					/>
+					<img class="h-8 w-auto" src={guardianIcon} alt="Greenhouse Guardian" />
 				</a>
 				<div class="hidden sm:ml-6 sm:block">
 					<div class="flex space-x-4">
@@ -128,20 +122,9 @@
 							<a href="/login" class="btn btn-primary">Login</a>
 						{/if}
 					</div>
-
-					<!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
 					<div
 						bind:this={profileDropdown}
-						class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100 transform opacity-0 scale-95"
+						class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100 transform opacity-0 scale-95 hidden"
 						role="menu"
 						aria-orientation="vertical"
 						aria-labelledby="user-menu-button"

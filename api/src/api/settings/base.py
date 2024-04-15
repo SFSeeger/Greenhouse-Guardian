@@ -166,4 +166,8 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
+REST_KNOX = {
+    'USER_SERIALIZER': 'user_management.serializers.user.UserSerializer',
+}
+
 NOTIFICATION_TIMEDELTA = 10

@@ -1,3 +1,4 @@
-source base.sh
+#!/bin/sh
+source /app/base.sh
 
 python -Xfrozen_modules=off -m debugpy --listen 0.0.0.0:3000 /app/web/manage.py runserver 0.0.0.0:80

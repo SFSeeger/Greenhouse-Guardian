@@ -76,6 +76,10 @@
 	};
 </script>
 
+<svelte:head>
+    <title>Webhook - Greenhouse Guardian</title> 
+</svelte:head>
+
 <h1>Webhook</h1>
 {#if data.webhook}
 	<p>

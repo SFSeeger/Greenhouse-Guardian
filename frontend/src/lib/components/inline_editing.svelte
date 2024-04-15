@@ -3,7 +3,8 @@
 
 	export let value: string | number,
 		name: string,
-		required = false;
+		required = false,
+		prefix = '';
 
 	const dispatch = createEventDispatcher();
 	let editing = false,
@@ -40,13 +41,21 @@
 {#if editing}
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<form on:submit|preventDefault={submit} on:keydown={keydown}>
-		<input {name} bind:value on:blur={submit} {required} use:focus />
+		<label for={name} class="float-left mr-2">{prefix} </label>
+		<input
+			class={prefix ? 'w-5/6' : 'w-full'}
+			{name}
+			bind:value
+			on:blur={submit}
+			{required}
+			use:focus
+		/>
 	</form>
 {:else}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	{#if value}
 		<div on:click={edit}>
-			{value}
+			<span>{prefix} {value}</span>
 		</div>
 	{:else}
 		<div on:click={edit} class="text-gray-600">Click to edit</div>

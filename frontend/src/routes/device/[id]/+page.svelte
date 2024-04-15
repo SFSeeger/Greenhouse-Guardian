@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { PUBLIC_API_URL } from '$env/static/public';
+	import Card from '$lib/components/card.svelte';
 	import InlineEditing from '$lib/components/inline_editing.svelte';
-	import { get } from 'svelte/store';
-	import type { PageData } from './$types';
-	import { authToken } from '../../../auth';
-	import { error } from '@sveltejs/kit';
 	import type { Plant } from '$lib/types/plant';
+	import plant_img from '$lib/assets/images/plant.jpg';
+	import { error } from '@sveltejs/kit';
+	import { get } from 'svelte/store';
+	import { authToken } from '../../../auth';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 
@@ -52,60 +54,74 @@
 	};
 </script>
 
-<h1>Device</h1>
-<h2 class="text-xl font-bold">
-	<InlineEditing value={data.device.name} name="name" on:inlineSubmit={saveDeviceValue} />
-</h2>
-<div>
-	<p>
-		Max Temperature: <InlineEditing
-			value={data.device.temperature_limit_max}
-			name="temperature_limit_max"
-			on:inlineSubmit={saveDeviceValue}
-		/>
-	</p>
-	<p>
-		Minimum Temperature: <InlineEditing
-			value={data.device.temperature_limit_min}
-			name="temperature_limit_min"
-			on:inlineSubmit={saveDeviceValue}
-		/>
-	</p>
-	<p>
-		Maximum Humidity: <InlineEditing
-			value={data.device.humidity_limit_max}
-			name="humidity_limit_max"
-			on:inlineSubmit={saveDeviceValue}
-		/>
-	</p>
-	<p>
-		Minimum Humidity: <InlineEditing
-			value={data.device.humidity_limit_min}
-			name="humidity_limit_min"
-			on:inlineSubmit={saveDeviceValue}
-		/>
-	</p>
-</div>
+<svelte:head>
+	<title>Device {data.device.name} - Greenhouse Guardian</title>
+</svelte:head>
 
-<div>
-	{#each data.plants as plant}
-		<h3 class="text-xl font-bold">Plants</h3>
-		<h4 class="text-md font-bold">
-			<InlineEditing value={plant.name} name="name" on:inlineSubmit={savePlantValue(plant.id)} />
-		</h4>
+<h1 class="text-xl font-bold">
+	<InlineEditing
+		value={data.device.name}
+		name="name"
+		on:inlineSubmit={saveDeviceValue}
+		prefix="Device"
+	/>
+</h1>
+<Card>
+	<div class="mb-4">
+		<p>
+			Max Temperature: <InlineEditing
+				value={data.device.temperature_limit_max}
+				name="temperature_limit_max"
+				on:inlineSubmit={saveDeviceValue}
+			/>
+		</p>
+		<p>
+			Minimum Temperature: <InlineEditing
+				value={data.device.temperature_limit_min}
+				name="temperature_limit_min"
+				on:inlineSubmit={saveDeviceValue}
+			/>
+		</p>
 		<p>
 			Maximum Humidity: <InlineEditing
-				value={plant.humidity_limit_max}
+				value={data.device.humidity_limit_max}
 				name="humidity_limit_max"
-				on:inlineSubmit={savePlantValue(plant.id)}
+				on:inlineSubmit={saveDeviceValue}
 			/>
 		</p>
 		<p>
 			Minimum Humidity: <InlineEditing
-				value={plant.humidity_limit_min}
+				value={data.device.humidity_limit_min}
 				name="humidity_limit_min"
-				on:inlineSubmit={savePlantValue(plant.id)}
+				on:inlineSubmit={saveDeviceValue}
 			/>
 		</p>
-	{/each}
-</div>
+	</div>
+	<div class="grid grid-rows-4 grid-flow-col gap-2">
+		{#each data.plants as plant}
+			<Card>
+				<h4 class="text-md font-bold">
+					<InlineEditing
+						value={plant.name}
+						name="name"
+						on:inlineSubmit={savePlantValue(plant.id)}
+					/>
+				</h4>
+				<p>
+					Maximum Humidity: <InlineEditing
+						value={plant.humidity_limit_max}
+						name="humidity_limit_max"
+						on:inlineSubmit={savePlantValue(plant.id)}
+					/>
+				</p>
+				<p>
+					Minimum Humidity: <InlineEditing
+						value={plant.humidity_limit_min}
+						name="humidity_limit_min"
+						on:inlineSubmit={savePlantValue(plant.id)}
+					/>
+				</p>
+			</Card>
+		{/each}
+	</div>
+</Card>

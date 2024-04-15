@@ -39,6 +39,11 @@
 	});
 </script>
 
+<svelte:head>
+    <title>Dashboard - Greenhouse Guardian</title> 
+</svelte:head>
+
+
 <h1>Dashboard</h1>
 <div>
 	<p>Welcome to the dashboard!</p>
