@@ -1,0 +1,28 @@
+#Create deploy directory
+- name: Create deploy directory
+  file:
+    path: "{{ nginx_deploy_dir }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_group }}"
+    mode: 0755
+
+#Copy nginx config to the remote server
+- name: Copy nginx config to the remote server
+  template:
+    src: nginx.conf.j2
+    dest: "{{nginx_deploy_dir}}/nginx.conf"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_group }}"
+    mode: 0644
+
+# start Nginx docker container
+- name: Start Nginx docker container
+  docker_container:
+    name: nginx
+    image: nginx
+    volumes:
+      - "{{nginx_deploy_dir}}/nginx.conf:/etc/nginx/nginx.conf:ro"
+    state: started
+    ports:
+      - "80:80"

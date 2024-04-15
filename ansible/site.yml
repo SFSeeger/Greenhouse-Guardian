@@ -1,0 +1,24 @@
+---
+- name: Setup Docker
+  hosts: all
+  remote_user: debian
+  roles:
+    - { role: common, tags: docker, become: yes }
+
+- name: Deploy Nginx
+  hosts: nginx
+  remote_user: debian
+  roles:
+    - { role: deploynginx, tags: nginx, become: yes }
+
+- name: Deploy Api
+  hosts: api
+  remote_user: debian
+  roles:
+    - { role: deployapi, tags: api, become: yes }
+
+- name: Deploy frontend
+  hosts: frontend
+  remote_user: debian
+  roles:
+    - { role: deployfrontend, tags: frontend, become: yes }

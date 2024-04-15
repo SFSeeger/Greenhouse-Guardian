@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mariadb:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - my-db:/var/lib/mysql
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - "8080:80"
+    expose:
+      - 80
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3306"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    environment:
+      ENVIRONMENT: "prod"
+    env_file:
+      - .env

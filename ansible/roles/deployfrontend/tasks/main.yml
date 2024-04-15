@@ -1,7 +1,7 @@
 #Create deploy directory
 - name: Create deploy directory
   file:
-    path: "{{ api_deploy_dir }}"
+    path: "{{ frontend_deploy_dir }}"
     state: directory
     owner: "{{ docker_user }}"
     group: "{{ docker_group }}"
@@ -11,16 +11,16 @@
 - name: Clone api repository
   git:
     repo: "{{ greenhouse_guardian_repo }}"
-    dest: "{{ api_deploy_dir }}"
+    dest: "{{ frontend_deploy_dir }}"
     accept_hostkey: yes
     clone: yes
     update: yes
     version: "{{ branch_name | default('main', true) }}"
 
-#Change ownership of api_deploy_dir
-- name: Change ownership of api_deploy_dir
+#Change ownership of frontend_deploy_dir
+- name: Change ownership of frontend_deploy_dir
   file:
-    path: "{{ api_deploy_dir }}"
+    path: "{{ frontend_deploy_dir }}"
     owner: "{{ docker_user }}"
     group: "{{ docker_group }}"
     state: directory
@@ -30,16 +30,16 @@
 - name: Copy .env file
   template:
     src: .env.j2
-    dest: "{{ api_deploy_dir }}/api/.env"
+    dest: "{{ frontend_deploy_dir }}/frontend/.env"
     owner: "{{ docker_user }}"
     group: "{{ docker_group }}"
-    mode: 0640
+    mode: 0660
 
 # Start deploy.compose docker service
 - name: Start deploy.compose docker service
-  # become_user: "{{ docker_user }}"
+  #become_user: "{{ docker_user }}"
   docker_compose:
-    project_src: "{{ api_deploy_dir }}/api"
+    project_src: "{{ frontend_deploy_dir }}/frontend"
     files:
       - docker-compose-prod.yml
     state: present

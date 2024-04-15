@@ -1,10 +1,11 @@
 <script lang="ts">
 	import '../app.css';
-	import { onMount } from 'svelte';
 	import { createAvatar } from '@dicebear/core';
 	import { bottts } from '@dicebear/collection';
 	import { authToken } from '../auth';
 	import { PUBLIC_API_URL } from '$env/static/public';
+	import guardianIcon from '$lib/assets/images/icon1024.png'
+
 	let profileDropdown: HTMLElement;
 	const openProfileDropdown = () => {
 		console.log('clicked');
@@ -85,7 +86,7 @@
 				<a href="/" class="flex flex-shrink-0 items-center">
 					<img
 						class="h-8 w-auto"
-						src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+						src="{guardianIcon}"
 						alt="Greenhouse Guardian"
 					/>
 				</a>
