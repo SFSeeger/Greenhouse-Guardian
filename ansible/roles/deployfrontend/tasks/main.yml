@@ -35,6 +35,13 @@
     group: "{{ docker_group }}"
     mode: 0660
 
+- name: Tear down existing services
+  docker_compose:
+    project_src: "{{ frontend_deploy_dir }}/frontend"
+    files:
+      - docker-compose-prod.yml
+    state: absent
+
 # Start deploy.compose docker service
 - name: Start deploy.compose docker service
   #become_user: "{{ docker_user }}"
@@ -43,3 +50,4 @@
     files:
       - docker-compose-prod.yml
     state: present
+    build: yes

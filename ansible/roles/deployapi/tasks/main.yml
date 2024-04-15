@@ -35,11 +35,19 @@
     group: "{{ docker_group }}"
     mode: 0640
 
-# Start deploy.compose docker service
-- name: Start deploy.compose docker service
+- name: Tear down existing services
+  docker_compose:
+    project_src: "{{ api_deploy_dir }}/api"
+    files:
+      - docker-compose-prod.yml
+    state: absent
+
+# Start docker-compose-prod.yml docker service
+- name: Start docker-compose-prod.yml docker service
   # become_user: "{{ docker_user }}"
   docker_compose:
     project_src: "{{ api_deploy_dir }}/api"
+    build: yes
     files:
       - docker-compose-prod.yml
     state: present
