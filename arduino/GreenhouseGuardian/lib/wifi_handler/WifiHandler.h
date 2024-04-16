@@ -1,8 +1,8 @@
 #ifndef WifiHandler_H
 #define WifiHandler_H
+#include <WiFiManager.h>
 
-extern char authToken[64];
-extern char apiUrl[64];
+extern WiFiManager wifiManager;
 
 void handleWiFi();
 

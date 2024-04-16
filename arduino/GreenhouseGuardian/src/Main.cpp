@@ -13,16 +13,19 @@ void setup()
     Serial.begin(9600);
     Serial.println("Setup methods");
     setupError();
-    loadConfig();
+
     setupDHT();
     setupPlants();
 
     Serial.println("Starting WiFi");
     handleWiFi();
+
+    Serial.println(authToken);
+    Serial.println(apiUrl);
 }
 
 void loop()
 {
     sendDataToServer();
-    delay(1000 * 2);
+    delay(1000 * 10);
 }

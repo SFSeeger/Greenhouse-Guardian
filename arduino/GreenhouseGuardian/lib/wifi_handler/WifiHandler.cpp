@@ -11,21 +11,27 @@
 #include <Config.h>
 #include <HTTPManager.h>
 
+WiFiManager wifiManager;
+
 bool shouldSaveConfig = false;
 
 void saveConfigCallback()
 {
-    Serial.println("Should save config");
     shouldSaveConfig = true;
+    Serial.println("Should save config" + String(shouldSaveConfig));
 }
 
 void handleWiFi()
 {
-    WiFiManager wifiManager;
+    loadConfig();
 
-    wifiManager.resetSettings();
+    // wifiManager.resetSettings();
     wifiManager.setAPStaticIPConfig(IPAddress(10, 0, 1, 1), IPAddress(10, 0, 1, 1), IPAddress(255, 255, 255, 0));
+    wifiManager.setBreakAfterConfig(true);
     wifiManager.setSaveConfigCallback(saveConfigCallback);
+
+    Serial.println(authToken);
+    Serial.println(apiUrl);
 
     WiFiManagerParameter authTokenParameter("authToken", "API auth token", authToken, sizeof(authToken) / sizeof(char), "required");
     WiFiManagerParameter apiUrlParameter("apiURL", "API Url", apiUrl, sizeof(apiUrl) / sizeof(char), "required");
@@ -45,27 +51,29 @@ void handleWiFi()
     strcpy(apiUrl, apiUrlParameter.getValue());
 
     Serial.println("Got AuthToken: " + String(authToken));
+    Serial.println("Should save config: " + String(shouldSaveConfig));
     if (shouldSaveConfig)
     {
         Serial.println("getting plant ids");
         // Create Plants on server. Send ids to prevent duplicates
         JsonDocument response;
-        String body = "{[";
+        String body = "[";
         for (int i = 0; i < NUM_PLANTS; i++)
         {
-            body += "{\"id\":" + String(plants[i].plantId + ",");
-            body += ",\"name\":\"Plant " + String(plants[i].plantId) + "\"}";
+            body += "{\"id\":" + String(plants[i].plantId) + ",";
+            body += "\"name\":\"Plant " + String(i) + "\"}";
             if (i != NUM_PLANTS - 1)
             {
                 body += ",";
             }
         }
-        body += "]}";
+        body += "]";
 
-        makePostRequest("/plants", body, response);
+        makePostRequest("/plant/mass-create/", body, response);
+        JsonArray ids = response["ids"].as<JsonArray>();
         for (unsigned i = 0; i < NUM_PLANTS; i++)
         {
-            plants[i].plantId = response["ids"][i];
+            plants[i].plantId = ids[i];
         }
 
         Serial.println("Saving Config");
@@ -75,20 +83,22 @@ void handleWiFi()
         JsonArray plantsArray = json["plants"].to<JsonArray>();
         for (int i = 0; i < NUM_PLANTS; i++)
         {
-            JsonObject plant;
+            JsonObject plant = plantsArray.add<JsonObject>();
             plant["plantId"] = plants[i].plantId;
             plant["plantPin"] = plants[i].plantPin;
-            plantsArray.add(plant);
         }
-
-        File configFile = SPIFFS.open("/config.json", "w");
-        if (!configFile)
+        if (SPIFFS.begin())
         {
-            Serial.println("failed to open config file for writing");
-            displayError(FsError);
+            File configFile = SPIFFS.open("/config.json", "w");
+            if (!configFile)
+            {
+                Serial.println("failed to open config file for writing");
+                displayError(FsError);
+            }
+            serializeJson(json, Serial);
+            serializeJson(json, configFile);
+            configFile.flush();
+            configFile.close();
         }
-        serializeJson(json, Serial);
-        serializeJson(json, configFile);
-        configFile.close();
     }
 }

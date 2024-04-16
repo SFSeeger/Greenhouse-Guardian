@@ -49,8 +49,7 @@ float readHumidity()
 
 long readPlantData(const unsigned plant_idx)
 {
-    unsigned soil_moisture = analogRead(plants[plant_idx].plantPin);
-    return map(soil_moisture, SENSOR_WET, SENSOR_DRY, 100, 0);
+    return analogRead(plants[plant_idx].plantPin);
 }
 
 void sendDataToServer()
@@ -60,13 +59,12 @@ void sendDataToServer()
     String bodyStr;
     body["temperature"] = readTemperature();
     body["humidity"] = readHumidity();
-    JsonArray plantentry_set = body["plantenry_set"].to<JsonArray>();
+    JsonArray plantentry_set = body["plantentry_set"].to<JsonArray>();
     for (unsigned plant_idx = 0; plant_idx < NUM_PLANTS; plant_idx++)
     {
-        JsonObject plantentry;
+        JsonObject plantentry = plantentry_set.add<JsonObject>();
         plantentry["plant"] = plants[plant_idx].plantId;
         plantentry["humidity"] = readPlantData(plant_idx);
-        plantentry_set.add(plantentry);
     }
     serializeJson(body, bodyStr);
     makePostRequest("/entry/", bodyStr, response);
