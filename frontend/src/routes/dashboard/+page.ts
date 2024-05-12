@@ -9,8 +9,8 @@ import type { Device } from '$lib/types/device';
 export const ssr = false;
 
 const createDeviceDatasets = (entries: Entry[], x_axis_labels: string[], devices: Device[]) => {
-	const temperatureDataset: { label: string; data: number[] }[] = [];
-	const humidityDataset: { label: string; data: number[] }[] = [];
+	const temperatureDataset: { label: string; data: number[]; pointRadius: number }[] = [];
+	const humidityDataset: { label: string; data: number[]; pointRadius: number }[] = [];
 
 	const deviceMap: Map<number, { temperature: number[]; humidity: number[] }> = new Map();
 	entries.forEach((entry: Entry) => {
@@ -31,11 +31,13 @@ const createDeviceDatasets = (entries: Entry[], x_axis_labels: string[], devices
 		const device = devices.find((device) => device.id === key);
 		temperatureDataset.push({
 			label: device?.name || `Device ${key}`,
-			data: value.temperature
+			data: value.temperature,
+			pointRadius: 0
 		});
 		humidityDataset.push({
 			label: device?.name || `Device ${key}`,
-			data: value.humidity
+			data: value.humidity,
+			pointRadius: 0
 		});
 	});
 	return [temperatureDataset, humidityDataset];

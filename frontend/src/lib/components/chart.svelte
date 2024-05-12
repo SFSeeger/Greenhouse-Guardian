@@ -37,7 +37,17 @@
 	<Line
 		{data}
 		{title}
-		options={{ responsive: true, animation: false, maintainAspectRatio: false }}
+		options={{
+			responsive: true,
+			animation: false,
+			maintainAspectRatio: false,
+			line: {
+				pointScale: 0
+			},
+			scales: {
+				x: { display: false }
+			}
+		}}
 		height="300rem"
 	/>
 </div>
