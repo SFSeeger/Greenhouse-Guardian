@@ -17,6 +17,8 @@ void setup()
     setupDHT();
     setupPlants();
 
+    pinMode(RESET_PIN, INPUT);
+
     Serial.println("Starting WiFi");
     handleWiFi();
 
@@ -26,6 +28,12 @@ void setup()
 
 void loop()
 {
+    if (digitalRead(RESET_PIN) == HIGH)
+    {
+        Serial.println("Resetting device");
+        wifiManager.resetSettings();
+        ESP.restart();
+    }
     sendDataToServer();
-    delay(1000 * 10);
+    delay(1000 * 5);
 }

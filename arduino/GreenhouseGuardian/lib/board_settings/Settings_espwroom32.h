@@ -29,4 +29,6 @@
 #define PLANT_PIN_3 ADC1_CH6
 #define PLANT_PIN_4 ADC1_CH7
 
+#define RESET_PIN 18
+
 // TODO: Add more definitions

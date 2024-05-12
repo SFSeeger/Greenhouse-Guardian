@@ -15,20 +15,12 @@ WiFiManager wifiManager;
 
 bool shouldSaveConfig = false;
 
-void saveConfigCallback()
-{
-    shouldSaveConfig = true;
-    Serial.println("Should save config" + String(shouldSaveConfig));
-}
-
 void handleWiFi()
 {
     loadConfig();
 
     // wifiManager.resetSettings();
     wifiManager.setAPStaticIPConfig(IPAddress(10, 0, 1, 1), IPAddress(10, 0, 1, 1), IPAddress(255, 255, 255, 0));
-    wifiManager.setBreakAfterConfig(true);
-    wifiManager.setSaveConfigCallback(saveConfigCallback);
 
     Serial.println(authToken);
     Serial.println(apiUrl);
@@ -47,13 +39,23 @@ void handleWiFi()
         delay(5000);
     }
 
-    strcpy(authToken, authTokenParameter.getValue());
-    strcpy(apiUrl, apiUrlParameter.getValue());
+    const char *newApiToken = authTokenParameter.getValue();
+    const char *newApiUrl = apiUrlParameter.getValue();
 
-    Serial.println("Got AuthToken: " + String(authToken));
+    if ((*newApiToken > 0 || *newApiUrl > 0) && (strcmp(authToken, newApiToken) != 0 || strcmp(apiUrl, newApiUrl) != 0))
+    {
+        Serial.println("New Config Detected");
+        shouldSaveConfig = true;
+    }
+
     Serial.println("Should save config: " + String(shouldSaveConfig));
     if (shouldSaveConfig)
     {
+        Serial.println("Got AuthToken: " + String(authToken));
+
+        strcpy(authToken, newApiToken);
+        strcpy(apiUrl, newApiUrl);
+
         Serial.println("getting plant ids");
         // Create Plants on server. Send ids to prevent duplicates
         JsonDocument response;

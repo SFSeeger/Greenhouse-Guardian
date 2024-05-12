@@ -16,15 +16,6 @@ char authToken[64];
 char apiUrl[64];
 PlantConfig plants[NUM_PLANTS] = {{1, PLANT_PIN_1}, {2, PLANT_PIN_2}, {3, PLANT_PIN_3}}; // Change this based on board config
 
-void loadPlants(PlantConfig *plants, JsonDocument &json)
-{
-    for (int i = 0; i < NUM_PLANTS; i++)
-    {
-        plants[i].plantId = json["plants"][i]["plantId"] || 0;
-        plants[i].plantPin = plants[i].plantPin;
-    }
-}
-
 void loadConfig()
 {
     // SPIFFS.format();
@@ -62,12 +53,25 @@ void loadConfig()
         auto deserializeError = deserializeJson(json, buf.get());
         serializeJson(json, Serial);
         if (!deserializeError)
+        {
             Serial.println("\nparsed json");
 
-        // ADD ALL CONFIG VARS HERE
-        strcpy(authToken, json["authToken"]);
-        strcpy(apiUrl, json["apiUrl"]);
-        loadPlants(plants, json);
+            // ADD ALL CONFIG VARS HERE
+            strcpy(authToken, json["authToken"]);
+            strcpy(apiUrl, json["apiUrl"]);
+            int i = 0;
+            for (JsonObject plant : json["plants"].as<JsonArray>())
+            {
+                plants[i].plantId = plant["plantId"];
+                plants[i].plantPin = plants[i].plantPin;
+                i++;
+            }
+        }
+        else
+        {
+            Serial.println("failed to load json config");
+            displayError(FsError);
+        }
     }
     configFile.close();
 }
